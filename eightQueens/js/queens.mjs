@@ -27,7 +27,7 @@ export function doQueensSeeEachOther(queenPostionArray) {
 
         if(!topRightCheck && !bottomLeftCheck && !topLeftCheck && !bottomRightCheck) {
             return false;
-        } else {
+        } else { 
             return true;
         }
     }

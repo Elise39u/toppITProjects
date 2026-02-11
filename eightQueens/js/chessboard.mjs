@@ -20,35 +20,48 @@ export function generateChessBoard(board) {
     })
 }
 
-function generateRandomPostion(minNumber, maxNumber) {
-    return Math.floor(Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber)
-}
-
 export function checkRulesWithWinPostion(winPostion) {
     const illegalPostion = doQueensSeeEachOther(winPostion);
+    const DuplicateCheck = checkForDuplicateColums(winPostion);
 
-    if(illegalPostion) {
+    if(illegalPostion || DuplicateCheck) {
         illegalPostionCheck(illegalPostion, "Illegal Position Found - Regenerating", winPostion);
     } else {
         illegalPostionCheck(illegalPostion, "Checking Complete - No Illegal Positions Found", winPostion);
     }
 }
 
-export function generatePostions() {
-    let randomChoiceArray = []
-    let oldNumber = [];
-    let newNumber = [];
-    for(let i = 0; i <= 7; i++) {
-        oldNumber = newNumber;
-        newNumber = [generateRandomPostion(0, 7), generateRandomPostion(1, 7)];
+function checkForDuplicateColums(queenPostionArray) {
+   const hasDuplicateSecond = new Set(queenPostionArray.map(([First, Second]) => Second)).size !== queenPostionArray.length;
 
-    if(oldNumber.length !== 0 && oldNumber === newNumber) {
-        newNumber = [generateRandomPostion(0, 7), generateRandomPostion(1, 7)] 
+   if(hasDuplicateSecond) {
+        return false;
+   } else {
+        return true;
+   }
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
-        randomChoiceArray.push(newNumber)
+}
+
+export function generatePostions() {
+    const randomChoiceArray = [];
+    const columns = [0,1,2,3,4,5,6,7];
+
+    shuffle(columns);
+
+    for (let i = 0; i < 8; i++) {
+        randomChoiceArray.push([i, columns[i]]);
     }
+
+    //Postion checker seems to fail even when its says its succeeds?
     const illegalPostion = doQueensSeeEachOther(randomChoiceArray);
 
+    console.log(randomChoiceArray)
     if(illegalPostion) {
         illegalPostionCheck(illegalPostion, "Illegal Position Found - Regenerating", randomChoiceArray);
     } else {
