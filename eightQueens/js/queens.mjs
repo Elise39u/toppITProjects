@@ -24,11 +24,11 @@ export function doQueensSeeEachOther(queenPostionArray) {
         const bottomLeftCheck = queensDiagnoalCheck(queenPostionArray, "bottomLeft");
         const topLeftCheck = queensDiagnoalCheck(queenPostionArray, "topLeft");
         const bottomRightCheck = queensDiagnoalCheck(queenPostionArray, "bottomRight");
-
+        
         if(!topRightCheck && !bottomLeftCheck && !topLeftCheck && !bottomRightCheck) {
-            return false;
-        } else { 
             return true;
+        } else { 
+            return false;
         }
     }
 }

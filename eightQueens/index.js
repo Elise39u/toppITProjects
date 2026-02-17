@@ -1,8 +1,8 @@
 import { generateChessBoard, generatePostions, checkRulesWithWinPostion} from "./js/chessboard.mjs";
-let tryalSolvedPostion = [ [1,2], [2,4], [3,6], [4,8], [5,3], [6,1], [7,7], [8,5] ]
+let tryalSolvedPostion = [ [0,1], [1,3], [2,5], [3,7], [4,2], [5,0], [6,7], [7,4] ]
 const board = document.getElementById("board1");
 
-document.getElementById("btn-generate").addEventListener("click", generatePostions);
-document.getElementById("btn-win").addEventListener("click", function() { checkRulesWithWinPostion(tryalSolvedPostion) });
+document.getElementById("btn-generate").addEventListener("click", function() { generatePostions(board) });
+document.getElementById("btn-win").addEventListener("click", function() { checkRulesWithWinPostion(tryalSolvedPostion, board) });
 
 generateChessBoard(board);

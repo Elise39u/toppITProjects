@@ -1,13 +1,12 @@
 import { doQueensSeeEachOther } from "./queens.mjs";
-const board = document.getElementById("board1");
 
-function illegalPostionCheck(illegalPostion, message, queensPostionArray) {
-    if(illegalPostion) {
-        console.log(message)
-        generatePostions();
+function illegalPostionCheck(illegalPostion, message, queensPostionArray, board) {
+    if(!illegalPostion) {
+        console.log(message);
+        generatePostions(board);
     } else {
         console.log("Checking Complete - No Illegal Positions Found")
-        generateQueensOnBoard(queensPostionArray);
+        generateQueensOnBoard(queensPostionArray, board);
     }
 }
 
@@ -20,14 +19,14 @@ export function generateChessBoard(board) {
     })
 }
 
-export function checkRulesWithWinPostion(winPostion) {
+export function checkRulesWithWinPostion(winPostion, board) {
     const illegalPostion = doQueensSeeEachOther(winPostion);
     const DuplicateCheck = checkForDuplicateColums(winPostion);
 
     if(illegalPostion || DuplicateCheck) {
-        illegalPostionCheck(illegalPostion, "Illegal Position Found - Regenerating", winPostion);
+        illegalPostionCheck(illegalPostion, "Illegal Position Found - Regenerating", winPostion, board);
     } else {
-        illegalPostionCheck(illegalPostion, "Checking Complete - No Illegal Positions Found", winPostion);
+        illegalPostionCheck(illegalPostion, "Checking Complete - No Illegal Positions Found", winPostion, board);
     }
 }
 
@@ -48,7 +47,7 @@ function shuffle(array) {
     }
 }
 
-export function generatePostions() {
+export function generatePostions(board) {
     const randomChoiceArray = [];
     const columns = [0,1,2,3,4,5,6,7];
 
@@ -61,23 +60,22 @@ export function generatePostions() {
     //Postion checker seems to fail even when its says its succeeds?
     const illegalPostion = doQueensSeeEachOther(randomChoiceArray);
 
-    console.log(randomChoiceArray)
-    if(illegalPostion) {
-        illegalPostionCheck(illegalPostion, "Illegal Position Found - Regenerating", randomChoiceArray);
+    if(!illegalPostion) {
+        illegalPostionCheck(illegalPostion, "Illegal Position Found - Regenerating", randomChoiceArray, board);
     } else {
-        illegalPostionCheck(illegalPostion, "Checking Complete - No Illegal Positions Found", randomChoiceArray);
+        illegalPostionCheck(illegalPostion, "Checking Complete - No Illegal Positions Found", randomChoiceArray, board);
     }
 }
 
 function changeFirstPosToLetter(queenPostionNum) {
     const letterArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-    return letterArray[queenPostionNum - 1]
+    return letterArray[queenPostionNum]
 }
 
-function generateQueensOnBoard(queenPostionArray) {
+function generateQueensOnBoard(queenPostionArray, board) {
     const chessPieceBoardArray = [];
     for(let i = 0; i < queenPostionArray.length; i++) {
-        chessPieceBoardArray.push([changeFirstPosToLetter(queenPostionArray[i][0]) + queenPostionArray[i][1], 'wQ' ])
+        chessPieceBoardArray.push([changeFirstPosToLetter(queenPostionArray[i][0]) + ( queenPostionArray[i][1] + 1), 'wQ' ])
     }
 
     const chessBoardPosObject = {};
