@@ -1,12 +1,12 @@
 import AreaBar from "@/../components/areaBar";
-import LocationView from "@/../components/locationView";
+import MonsterFight from "@/../components/monsterFight";
 import InventoryBar from "@/../components/inventoryBar";
 
-export default function Location() {
+export default function Monster() {
     return (
         <div>
             <AreaBar />
-            <LocationView />
+            <MonsterFight />
             <InventoryBar />
         </div>
     );

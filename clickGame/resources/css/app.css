@@ -34,7 +34,9 @@ body {
 }
 
 #locationName {
-    outline: 2px solid black;
+    outline: 2px solid black;  
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 }
 
 .areaText {
@@ -75,4 +77,106 @@ body {
     padding-left: 1rem;
     text-align: left;
     font-size: 16px;
+}
+
+.choiceOption {
+    padding-left: 1rem;
+    color: blue;
+    text-decoration: underline;
+}
+
+.choiceOption:hover {
+    color: darkorchid;
+    text-decoration: none
+}
+
+.inventoryBar {
+    background-color: rgba(255, 255, 255);
+    margin-bottom: 1rem;
+    margin-top: 15px;
+    margin-left: 15%;
+    margin-right: 15%;
+    border-radius: 15px;
+    outline: 2px solid rgb(0, 0, 0);
+}
+
+.inventoryTitle {
+    padding-left: 1rem;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: left;
+}
+
+#inventoryName {
+    outline: 2px solid black;  
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.inventoryItem {
+    margin-left: 3em;
+    margin-right: 3em;
+    list-style: circle;
+    font-size: 16px;
+}
+
+.inventoryList {
+    position: relative;
+    padding-left:0;
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.inventoryList li {
+    width: 50%;
+    flex: 0 0 150px;
+} 
+
+/* Mabye the idea to combine Quest and End items? Or make them separte this could hint at their importance */
+#storyItem {
+    color: #D8661B;
+}
+
+#weapons {
+    color: #0D8EFF;
+}
+
+#potions {
+    color: #FFE38E;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.monsterStat {
+    padding-left: 1rem;
+    font-size: 20px;
+}
+
+.monsterInfo {
+    padding-left: 1rem;
+}
+
+.statsContainer {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+    
+#monsterStats,
+#playerStats {
+    list-style: none;
+    padding-left: 0;
+}
+
+.monsterStatTitle {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.btn {
+    margin: 5px;
 }

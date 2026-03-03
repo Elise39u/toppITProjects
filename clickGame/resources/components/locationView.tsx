@@ -20,8 +20,16 @@ const LocationView: React.FC = () => {
                     <b>username:</b> Great you think to yourself. With vauge memories of waht happend on New years eve you are left no choice. <br />
                     <b>username:</b> You vaguley recall a pregnant transgirl and thier pregnant coach. Talking about a hidden subbase seieng this coming <br />
                     <b>username:</b> I did have their number i did ask it after that awesome night. But my phone is dead and there is no more power <br />
-                    <b>username:</b> With no idea what happend to the duo. You decided to pack and head for the only option you have. Brooklyn bridge <br />
-                    </p>
+                    <b>username:</b> Guess not finding out what happend to that duo if i stick here. Think my only option now is the brooklyn bridge. <br />
+                    </p> <br />
+
+                    <p className='locationTitle'> Where do you go?</p>
+                    <ul>
+                        <li className='choiceOption'><a href='#'>go to the kitchen</a></li>
+                        <li className='choiceOption'><a href='#'>go to the hallways of the hotel</a></li>
+                        <li className='choiceOption'><a href='#'>go to the bathroom</a></li>
+                        <li className='choiceOption'><a href='#'>go to the windows</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -1,12 +1,12 @@
 import AreaBar from "@/../components/areaBar";
-import LocationView from "@/../components/locationView";
+import NpcBar from "@/../components/npc";
 import InventoryBar from "@/../components/inventoryBar";
 
 export default function Location() {
     return (
         <div>
             <AreaBar />
-            <LocationView />
+            <NpcBar />
             <InventoryBar />
         </div>
     );

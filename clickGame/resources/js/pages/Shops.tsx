@@ -1,12 +1,12 @@
 import AreaBar from "@/../components/areaBar";
-import LocationView from "@/../components/locationView";
+import Shops from "@/../components/shops";
 import InventoryBar from "@/../components/inventoryBar";
 
 export default function Location() {
     return (
         <div>
             <AreaBar />
-            <LocationView />
+            <Shops />
             <InventoryBar />
         </div>
     );
