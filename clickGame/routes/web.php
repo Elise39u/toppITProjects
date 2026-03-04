@@ -1,7 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use Inertia\Inertia;    
+
+use App\Models\Location;
+use App\Http\Resources\LocationResource;
+use App\Http\Resources\ChoicesResource;
+use App\Models\Choices;
+use App\Models\Areas;
+use App\Http\Resources\AreasResource;
 
 /*
     The idea in simple that there might be 4-5 pages in the end product
@@ -19,12 +26,15 @@ use Inertia\Inertia;
     /Logout - so a user can logout of the game 
     /Patchnotes - A page so the user can keep track of changes made to the game and addtions added. 
 */
+
 Route::get('/', function () {
     return Inertia::render('Homepage');
 })->name('home');
 
-Route::get('/location', function () {
-    return Inertia::render('Location');
+Route::get('/location/{id}', function (string $id) {
+    return Inertia::render('Location', [
+        'location' => new LocationResource(Location::findorFail($id)->load('choices')->load('areas')),
+    ]);
 })->name('location');
 Route::get('/monster', function () {
     return Inertia::render('Monster');

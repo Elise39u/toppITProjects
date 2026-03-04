@@ -50,7 +50,6 @@ function CalculatePostionDifference(posLeft, posRight, direction) {
 }
 
 function queensDiagnoalCheck(queenPostionArray, direction) {
-    let illegalPostion = false;
     let resultArray = [];
 
     /*
@@ -67,9 +66,5 @@ function queensDiagnoalCheck(queenPostionArray, direction) {
 
     const duplicates = resultArray.filter((item, index) => resultArray.indexOf(item) !== index);
 
-    if(duplicates.length > 0) {
-        illegalPostion = true;
-    }
-
-    return illegalPostion
+    return duplicates.length > 0;
 }
