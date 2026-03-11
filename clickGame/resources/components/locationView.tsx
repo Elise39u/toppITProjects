@@ -34,14 +34,14 @@ const LocationView: React.FC<LocationComponentProps> = ({ location }) => {
             <div className='locationDiv'>
                 <img className="locationImage" src={locationData.foto_url} alt="Location" />
                 <div>
-                    <h1 className="locationTitle">{locationData.name}</h1>
+                    <h1 className="locationTitle">{locationData.title}</h1>
                     <p className="locationStory" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(locationData.story)}}></p> <br />
 
                     <p className='locationTitle'> Where do you go?</p>
                     <ul>
                           {locationData.choices.map(choice => (
                             <li key={choice.id} className='choiceOption'>
-                                <a href={`location/${choice.to_location_id}`}>
+                                <a href={`../location/${choice.to_location_id}`}>
                                     {choice.name}
                                 </a>
                             </li>

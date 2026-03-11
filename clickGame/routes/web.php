@@ -9,6 +9,8 @@ use App\Http\Resources\ChoicesResource;
 use App\Models\Choices;
 use App\Models\Areas;
 use App\Http\Resources\AreasResource;
+use App\Http\Controllers\Auth\Register;
+use App\Http\Controllers\Auth\Login;
 
 /*
     The idea in simple that there might be 4-5 pages in the end product
@@ -27,21 +29,38 @@ use App\Http\Resources\AreasResource;
     /Patchnotes - A page so the user can keep track of changes made to the game and addtions added. 
 */
 
+//Login Routes 
 Route::get('/', function () {
-    return Inertia::render('Homepage');
-})->name('home');
+    return Inertia::render('Auth/Login');
+})->name('login');
+Route::get('/Login', function () {
+    return Inertia::render('Auth/Login');
+})->name('login');
 
-Route::get('/location/{id}', function (string $id) {
+Route::post('/login', Login::class)
+    ->middleware('guest');
+
+// Registration routes
+Route::get('/Register', function () {
+    return Inertia::render('Auth/Register');
+})->name('register');
+ 
+Route::post('/register', Register::class)
+    ->middleware('guest');
+
+Route::get('/location/{id}', function (Location $id) {
+    $id->load(['choices','area']);
+
     return Inertia::render('Location', [
-        'location' => new LocationResource(Location::findorFail($id)->load('choices')->load('areas')),
+        'location' => new LocationResource($id)
     ]);
-})->name('location');
+})->middleware('auth');
 Route::get('/monster', function () {
     return Inertia::render('Monster');
-})->name('Monster');
+})->name('Monster')->middleware('auth');
 Route::get('/npc', function () {
     return Inertia::render('Npc');
-})->name('Npc');
+})->name('Npc')->middleware('auth');
 Route::get('/shop', function () {
     return Inertia::render('Shops');
-})->name('Shops');
+})->name('Shops')->middleware('auth');

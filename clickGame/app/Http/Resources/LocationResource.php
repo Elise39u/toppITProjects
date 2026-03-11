@@ -26,7 +26,7 @@ class LocationResource extends JsonResource
             'condition_value' => $this->condition_value,
 
             'choices' => ChoicesResource::collection($this->whenLoaded('choices')),
-            'area' => AreasResource::collection($this->whenLoaded('areas'))
+            'area' => new AreasResource($this->whenLoaded('area')),
         ];
     }
 }

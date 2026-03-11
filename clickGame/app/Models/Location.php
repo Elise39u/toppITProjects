@@ -10,8 +10,9 @@ class Location extends Model
         return $this->hasMany('App\\Models\\Choices', 'from_location_id');
     }
 
-    public function areas() {
-        return $this->hasMany('App\\Models\\Areas', 'id');
+    public function area()
+    {
+        return $this->belongsTo(Areas::class, 'area_id');
     }
 
     protected $fillable = [

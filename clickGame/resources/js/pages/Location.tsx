@@ -5,7 +5,7 @@ import InventoryBar from "@/../components/inventoryBar";
 export default function Location(props: any) {
     return (
         <div>
-            <AreaBar areaData={props.location.data.area[0]} />
+            <AreaBar areaData={props.location.data.area} locationName={props.location.data.name}/>
             <LocationView location={props.location} />
             <InventoryBar />
         </div>

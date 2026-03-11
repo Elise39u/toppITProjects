@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+/* @import 'tailwindcss'; */
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -179,4 +179,12 @@ body {
 
 .btn {
     margin: 5px;
+}
+
+.form-element{
+    margin: 15px;
+}
+
+.form-label {
+    margin-right: 15px;
 }
