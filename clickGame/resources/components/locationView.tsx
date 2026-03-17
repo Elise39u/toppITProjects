@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import exampleLocationImg from "../img/locations/dejavu.jpg";
+import React from 'react';
 import DOMPurify from "dompurify";
 
 interface ApiResponse<T> {

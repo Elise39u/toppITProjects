@@ -6,7 +6,12 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<ValidationErrors>({});
+
+    type ValidationErrors = {
+        email?: string[];
+        password?: string[];
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,9 +24,11 @@ export default function Login() {
             });
 
             window.location.href = "/location/1";
-        } catch (error: any) {
-            if (error.response?.status === 422) {
-                setErrors(error.response.data.errors);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 422) {
+                    setErrors(error.response.data.errors);
+                }
             }
         }
     };
@@ -63,7 +70,7 @@ export default function Login() {
                 </div>
 
                 <Button variant="outline-success" type="submit">Login</Button>
-                <Button variant="outline-info"><a href="/Register"> Register</a></Button>
+                <Button variant="outline-info" onClick={() => (window.location.href = "/Register")}> Register </Button>
             </form>
         </div>
     );

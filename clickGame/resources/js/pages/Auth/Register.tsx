@@ -9,8 +9,15 @@ export default function Register() {
         password: "",
         password_confirmation: "",
     });
+    
+    type ValidationErrors = {
+        name?: string[];
+        email?: string[];
+        password?: string[];
+        password_confirmation?: string[];
+    };
 
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<ValidationErrors>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({
@@ -27,9 +34,11 @@ export default function Register() {
 
             // redirect after successful register
             window.location.href = "/location/1";
-        } catch (error: any) {
-            if (error.response?.status === 422) {
-                setErrors(error.response.data.errors);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 422) {
+                    setErrors(error.response.data.errors);
+                }
             }
         }
     };
@@ -83,8 +92,8 @@ export default function Register() {
                 </div>
 
                 <Button variant="outline-success" type="submit">Register</Button>
-                <Button variant="outline-info"><a href="/"> Login</a></Button>
-            </form>
+                <Button variant="outline-info" onClick={() => (window.location.href = "/")}> Login </Button>
+             </form>
         </div>
     );
 }

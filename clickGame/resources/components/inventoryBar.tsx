@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 //Add later the data gotten from location in the dataabase. This is current placeholder data
 const InventoryBar: React.FC = () => {
-    const AreaTime = new Date().toLocaleTimeString('en-US', {timeZone: "America/New_York"});
 
     return (
         <div className='inventoryBar'> 

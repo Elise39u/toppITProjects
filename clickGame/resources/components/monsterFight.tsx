@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import exampleMonsterImage from "../img/monsters/sandRat.jpg";
 

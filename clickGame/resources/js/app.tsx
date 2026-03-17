@@ -1,9 +1,9 @@
 import { createInertiaApp } from '@inertiajs/react';
+import axios from "axios";
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import '../css/app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from "axios";
 
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 

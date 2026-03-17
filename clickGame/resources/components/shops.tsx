@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import exampleLocationImg from "../img/shops/potionShop.jpg";
 import Button from 'react-bootstrap/esm/Button';
 
