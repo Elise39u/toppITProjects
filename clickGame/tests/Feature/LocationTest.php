@@ -25,6 +25,7 @@ class LocationTest extends TestCase
         $response = $this->get('/location/1');
 
         $response->assertRedirect('/');
+        $this->assertStatus(500);
     }
 
     public function test_location_page_loads_when_logged_in(): void
