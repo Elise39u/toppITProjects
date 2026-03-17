@@ -20,8 +20,13 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: clickGame 
+
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
