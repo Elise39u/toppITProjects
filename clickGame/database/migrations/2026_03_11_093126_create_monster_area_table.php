@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('monster_area', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('area_id');
-            $table->interger('monster_id');
+            $table->integer('monster_id');
         });
     }
 

@@ -48,6 +48,7 @@ Route::get('/Register', function () {
 Route::post('/register', Register::class)
     ->middleware('guest');
 
+//Game routes
 Route::get('/location/{id}', function (Location $id) {
     $id->load(['choices','area']);
 
