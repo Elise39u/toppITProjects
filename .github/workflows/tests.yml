@@ -17,6 +17,11 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: clickgame 
+
     strategy:
       matrix:
         php-version: ['8.4', '8.5']
