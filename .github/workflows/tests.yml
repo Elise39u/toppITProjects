@@ -20,7 +20,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: clickgame 
+        working-directory: ../clickgame 
 
     strategy:
       matrix:
