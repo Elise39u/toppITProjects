@@ -3,17 +3,7 @@ import LocationView from "@/../components/locationView";
 import InventoryBar from "@/../components/inventoryBar";
 import { usePage } from "@inertiajs/react";
 import { useEffect } from "react";
-
-
-type PageProps = {
-    auth: {
-        user: gameUser;
-    };
-    location: {
-        data: LocationData;
-    };
-    errors: Record<string, string>;
-};
+import type { PageProps } from "@/types";
 
 export default function Location() {
     const { auth, location } = usePage<PageProps>().props;

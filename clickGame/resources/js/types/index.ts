@@ -1,5 +1,5 @@
 // Type to use in the game which contains the userdata nesscary for the game.
-type gameUser = {
+export type GameUser = {
     id: number;
     name: string;
     email: string;
@@ -26,19 +26,19 @@ type gameUser = {
 };
 
 //Location related Types 
-type Choice = {
+export type Choice = {
     id: number;
     name: string;
     from_location_id: number;
     to_location_id: number;
 };
 
-type Area = {
+export type Area = {
     id: number;
     name: string;
 };
 
-type LocationData = {
+export type LocationData = {
     id: number;
     name: string;
     area_id: number;
@@ -49,4 +49,13 @@ type LocationData = {
     condition_value: string | null;
     choices: Choice[];
     area: Area;
+};
+
+export type PageProps = {
+    auth: {
+        user: GameUser;
+    };
+    location: {
+        data: LocationData;
+    };
 };
