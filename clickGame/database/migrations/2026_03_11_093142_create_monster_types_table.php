@@ -20,9 +20,11 @@ return new class extends Migration
             $table->integer('defense');
             $table->integer('magical_defense');
             $table->integer('gold');
+            $table->integer('xp');
             $table->integer('curhp');
             $table->integer('curmp');
             $table->integer('chance')->nullable();
+            $table->string('info', 7156);
         });
     }
 

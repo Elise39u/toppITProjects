@@ -37,7 +37,8 @@ function getCookie(cName : String) {
   return res
 }
 
-console.log(getCookie('username'))
+const cookieName = getCookie("username") ?? "";
+
 const LocationView: React.FC<LocationComponentProps> = ({ location }) => {
     const locationData = location.data;
     return (
@@ -46,7 +47,7 @@ const LocationView: React.FC<LocationComponentProps> = ({ location }) => {
                 <img className="locationImage" src={locationData.foto_url} alt="Location" />
                 <div>
                     <h1 className="locationTitle">{locationData.title}</h1>
-                    <p className="locationStory" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(locationData.story)}}></p> <br />
+                    <p className="locationStory" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(locationData.story.replaceAll("username", cookieName))}}></p> <br />
 
                     <p className='locationTitle'> Where do you go?</p>
                     <ul>

@@ -8,7 +8,11 @@ use App\Http\Resources\LocationResource;
 use App\Http\Resources\ChoicesResource;
 use App\Models\Choices;
 use App\Models\Areas;
+use App\Models\Monster;
+use App\Models\MonsterArea;
+use App\Models\MonsterType;
 use App\Http\Resources\AreasResource;
+use App\Http\Resources\MonsterAreaResource;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Auth\Login;
 
@@ -48,7 +52,7 @@ Route::get('/Register', function () {
 Route::post('/register', Register::class)
     ->middleware('guest');
 
-//Game routes
+/*Game routes
 Route::get('/location/{id}', function (Location $id) {
     $id->load(['choices','area']);
 
@@ -65,3 +69,34 @@ Route::get('/npc', function () {
 Route::get('/shop', function () {
     return Inertia::render('Shops');
 })->name('Shops')->middleware('auth');
+*/
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/location/{id}', function (Location $id) {
+        $id->load(['choices','area']);
+
+        return Inertia::render('Location', [
+            'location' => new LocationResource($id)
+        ]);
+    });
+
+    Route::get('/location/15/{area_id}', function ($area_id) {
+        $monsterArea = MonsterArea::with(['monster.monster_type', 'area'])
+            ->where('area_id', $area_id)
+            ->inRandomOrder()
+            ->first();
+
+        return Inertia::render('Monster', [
+            'Monster' => new MonsterAreaResource($monsterArea)
+        ]);
+    });
+    /*
+    Route::get('/location/{location}/monster/{monster}', MonsterController::class);
+
+    Route::get('/location/{location}/npc/{npc}', NpcController::class);
+
+    Route::get('/location/{location}/shop/{shop}', ShopController::class);
+    */
+
+});

@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('monster_area', function (Blueprint $table) {
+        //Add later a row that depicts to which locations a player can go. So area 1 has 9 and (Still to add docks) with names.
+        Schema::create('monster_areas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('area_id');
             $table->integer('monster_id');
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('monster_area');
+        Schema::dropIfExists('monster_areas');
     }
 };

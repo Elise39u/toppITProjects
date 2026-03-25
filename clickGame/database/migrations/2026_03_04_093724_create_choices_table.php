@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('from_location_id');
-            $table->integer('to_location_id');
+            $table->string('to_location_id');
         });
     }
 

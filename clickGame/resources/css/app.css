@@ -26,6 +26,12 @@ body {
     outline: 2px solid rgb(0, 0, 0);
 }
 
+.parentAreaDivInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .locationTitle { 
     padding-left: 1rem;
     font-size: 1.5em;
@@ -40,14 +46,11 @@ body {
 }
 
 .areaText {
-    padding-right: 0.5rem;
-    padding-bottom: 0.5rem;
     text-align: right;
 }
 
 .areaTime {
     padding-right: 0.5rem;
-    padding-bottom: 0.5rem;
     text-align: right;
 }
 
@@ -187,4 +190,31 @@ body {
 
 .form-label {
     margin-right: 15px;
+}
+
+.playerHealth {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    text-align: left;
+}
+
+.playerStatAreaDiv {
+    padding-left: 0.5rem;
+}
+
+.areaInfoDiv {
+    padding-right: 0.5rem;
+}
+
+.fightLogs {
+    background-color: #1a1a1a;
+    color: #00ff00;
+    padding: 10px;
+    border-radius: 5px;
+    height: 150px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    text-align: left;
+    font-family: monospace;
+    border: 1px solid #333;
 }

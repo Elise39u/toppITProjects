@@ -93,5 +93,14 @@ class LocationSeeder extends Seeder
         DB::table('choices')->insert(['name' => 'Go check out the sand path', 'from_location_id' => 6, 'to_location_id' => 9]);
         DB::table('choices')->insert(['name' => 'Check the shore line', 'from_location_id' => 6, 'to_location_id' => 10]);
         DB::table('choices')->insert(['name' => 'Go further down the streets', 'from_location_id' => 6, 'to_location_id' => 11]);
+
+        DB::table('locations')->insert(['id' => 9, 'name' => 'Sand Sand SAnd everywhere and a escpae in sight?', 'area_id' => 1,
+            'title' => 'Mabye you should have brought something to wipe of that sand?', 'foto_url' => '../img/locations/sandPath.jpg',
+            'story' => 'So there was apprently a new developed not so sneaky sandpath here. That is suppose to be a shortcut through the city <br />
+            The question now remains whats that in the distance and holds it a possible escpae route. From here it looks like a docks? <br />
+            But with all the gras and hills around its only the question that remains. Is it safe to cross these paths? After all you dont know what houses here <br />
+            You have been knocked out for a while.. So the lingering thought is a escpae possible or do you fear the unkown lurking at you?']);
+        DB::table('choices')->insert(['name' => 'Go on to the docks if you dare', 'from_location_id' => 9, 'to_location_id' => '15/1']); 
+        DB::table('choices')->insert(['name' => 'Go back into the city', 'from_location_id' => 9, 'to_location_id' => 6]);
     }
 }

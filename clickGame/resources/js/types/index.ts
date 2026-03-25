@@ -51,6 +51,32 @@ export type LocationData = {
     area: Area;
 };
 
+export type MonsterData = {
+    id: number;
+    area_id: number;
+    monster_id: number;
+    monster: MonsterTypeData;
+    area: Area;
+};
+
+export type MonsterTypeData = {
+    id: number;
+    name: string;
+    image_url: string;
+    attack: number;
+    magical_attack: number;
+    defense: number;
+    magical_defense: number;
+    gold: number;
+    xp: number;
+    curhp: number;
+    curmp: number;
+    chance: number | null;
+    aggressionLvL: number;
+    type: string;
+    info: string;
+};
+
 export type PageProps = {
     auth: {
         user: GameUser;
@@ -59,3 +85,12 @@ export type PageProps = {
         data: LocationData;
     };
 };
+
+export type MonsterPageProps = {
+    auth: {
+        user: GameUser;
+    },
+    Monster: {
+        data: MonsterData;
+    }
+}

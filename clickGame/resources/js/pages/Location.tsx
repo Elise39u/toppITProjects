@@ -11,11 +11,15 @@ export default function Location() {
 
     useEffect(() => {
         document.cookie = `username=${user.name}`;
+        document.cookie = `last_location=${location.data.id}`
     }, [user.name]);    
+
+    console.log(location)
 
     return (
         <div>
-            <AreaBar areaData={location.data.area} locationName={location.data.name}/>
+            <AreaBar areaData={location.data.area} locationName={location.data.name} userHP={"" + user.curhp + "/" + user.maxhp}
+                magicalPoints={"" + user.curmp + "/" + user.maxmp}/>
             <LocationView location={location} />
             <InventoryBar />
         </div>

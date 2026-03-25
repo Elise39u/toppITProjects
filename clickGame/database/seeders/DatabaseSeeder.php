@@ -15,5 +15,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(LocationSeeder::class);
         $this->call(AreaSeeder::class);
+        $this->call(MonsterAreaSeeder::class);
+        $this->call(MonsterSeeder::class);
+        $this->call(MonsterTypeSeeder::class);
+        $this->call(UserSeeder::class);
     }
 }

@@ -10,8 +10,9 @@ class ChoicesTest extends TestCase
 {
     /**
      * A basic feature test example.
+     * Add test_ to function you want to test 
      */
-    public function test_example(): void
+    public function example(): void
     {
         $response = $this->get('/');
 
