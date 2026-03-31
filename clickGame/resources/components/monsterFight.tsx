@@ -93,10 +93,12 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
         let attackDamge = 0;
         if(attacker === "user") {
             user.attack <= Monster.defense ? attackDamge = 0 : attackDamge = user.attack - Monster.defense;
+            monsterStunned ? attackDamge * 1.5 : null;
             setTempMonsterHP(tempMonsterHP - attackDamge);
             addLog(`${cookieName} attacked ${Monster.name} for ${attackDamge} damage!`);
         } else {
             Monster.attack <= user.defense ? attackDamge = 0 : attackDamge = Monster.attack - user.defense;
+            userStunned ? attackDamge * 1.5 : null;
             setTempUserHP(tempUserHP - attackDamge);
             addLog(`${Monster.name} attacked ${cookieName} for ${attackDamge} damage!`);
         }
@@ -127,6 +129,39 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
 
         let monsterHPCalHalf = Monster.curhp / 2;
         let monsterHPCalQuarter = Monster.curhp / 4;
+        let userDamage =  user.attack <= Monster.defense ? attackDamge = 0 : attackDamge = user.attack - Monster.defense;
+        let doIDie = tempMonsterHP - userDamage <= 0;
+
+        let actionChance = Math.floor(Math.random() * 100) + 1;
+
+        let HalfHp = false;
+        let QuarterHp = false;
+
+        tempMonsterHP <= monsterHPCalHalf ? HalfHp = true : HalfHp = false;
+        tempMonsterHP <= monsterHPCalQuarter ? QuarterHp = true : QuarterHp = false;
+        monsterHPCalHalf && monsterHPCalQuarter ? HalfHp = false : null;
+        let tempMonsterAgression = Monster.aggressionLvL;
+        
+        if(HalfHp) tempMonsterAgression / 2; 
+        if(QuarterHp) tempMonsterAgression / 4;
+        
+        if(doIDie) {
+            chooseMonsterAction(tempMonsterAgression);
+            return;
+        } else if(tempMonsterAgression >= actionChance) {
+            cacluateDamage("Monster");
+            return;
+        } else if(currentFlee >= 75) {
+            cacluateDamage("Monster");
+            return;
+        } else if(currentStun >= 75) {
+            chooseMonsterAction(tempMonsterAgression);
+            return;
+        }
+        else {
+            chooseMonsterAction(tempMonsterAgression);
+            return;
+        }
 
         /*
             We have that the monster can work with:
@@ -144,6 +179,30 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                 But increased when hitting the Hp threshold of 50% and 75% chance by x amount?
         */
     }
+
+    function chooseMonsterAction(agressionLvL: number) {
+        let actionChance = Math.floor(Math.random() * 100) + 1;
+
+        if(agressionLvL >= actionChance) {
+            let tauntChance = Math.floor(Math.random() * 100) + 1;
+            let tauntChanceCheck = tauntChance >= agressionLvL;
+            tauntChanceCheck ? setUserStunned(true) : null;
+            tauntChanceCheck ? addLog(`${Monster.name} successfully tautned and stunned you. You cant move next turn!`) : 
+                addLog(`${Monster.name} attempted to taunt you but failed!`);
+        } else {
+            let fleeChance = Math.floor(Math.random() * 100) + 1;
+            let fleeBarrier = 100 - agressionLvL;
+            
+            if(fleeChance >= fleeBarrier) {
+                addLog(`${Monster.name} has fled from the fight!. You win but with no rewardss whomp whomp. :)` )
+                setShowLocationButtons(true);
+                setShowFightButtons(false);
+            } else {
+                addLog(`${Monster.name} attempted to flee but failed!`);
+            }
+        }
+    }
+
 
     function caclcuateUserFleeChance() {
         let base = Math.floor(Math.random() * 26);
@@ -171,6 +230,16 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
     const handleAction = async (actionType: string) => {
         setTypeSubmit(actionType); 
 
+        let roleChance = Math.floor(Math.random() * 100) + 1;
+
+        if(userStunned) {
+            addLog(`You have been stunned and couldnt move this turn`);
+            await sleep(500);
+            await MonsterAI();
+            setUserStunned(false);
+            return;
+        }
+
         switch(actionType) {
             case "Fight":
                 await cacluateDamage("user");
@@ -189,8 +258,23 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
 
                 break;
             case "Taunt":
-                // TODO: Implement taunt logic
-                break;
+                /* 
+                    State change issue causing without a page update to only have one update resulting in always true or false 
+                    until update. Also resulting in always monster stun if we dont update back after an turn properly 
+
+                    Update userstun chance is never set techinally now same for flee chance until the monster moves
+                    So a first turn Taunt or flee always will result in false. Until the monster moved; 
+                    So the question is do we set these first or await a falied attempt? 
+
+                    Function used ot calculate these chances or simply solved by using the MonsterAI function. 
+                    caclcuateUserFleeChance();
+                    caclcuateUserStunChance(); 
+                 */
+                roleChance <= userStunChance ? setMonsterStunned(true) : null; 
+                console.log(roleChance);
+                console.log(userStunChance);
+                console.log(roleChance <= userStunChance)
+                userStunChance ? addLog(`You have succesfully taunted the ${Monster.name} and stunned it for the next turn!`) : addLog(`Your taunt failed against ${Monster.name}`);
             case "Seduce":
                 // TODO: Implement seduce logic
                 break;
@@ -230,10 +314,16 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                             </div>
                         ))}
                     </div>
-                    {showFightButtons && 
+                    {userStunned && 
+                        <>
+                            <span className="badge bg-danger me-2">Stunned!</span> Cant move this turn! <br />
+                            <Button variant="danger" onClick={() => handleAction("stunned")}> Stunned cant move</Button>
+                        </>
+                    }
+                    {showFightButtons && !userStunned &&
                         <>                        
                             <Button onClick={handleShow} variant='dark'>Explain fight mechanics</Button>
-                            <Button onClick={handleMonsterShow} variant='dark'>Small info about the monster</Button>
+                            <Button onClick={handleMonsterShow} variant='dark'>Small info about the monster</Button> <br />
                             <Button onClick={() => handleAction("Fight")} variant="danger">Fight the {Monster.name}</Button> <br />
                             <Button onClick={() => handleAction("Taunt")} variant="warning">Attempt to Taunt the {Monster.name}</Button> <br />
                             <Button onClick={() => handleAction("Seduce")} variant="warning">Attempt to Seduce the {Monster.name}</Button> <br />
@@ -285,7 +375,7 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                                         </h6>
                                         <ul className="list-unstyled ms-4">
                                             <li className="mb-2">
-                                                <strong>Taunt:</strong> Success stuns the monster. Failure gives them a free turn.
+                                                <strong>Taunt:</strong> Success stuns the monster + * 1,5 dmg increase. Failure gives them a free turn.
                                             </li>
                                             <li>
                                                 <strong>Seduce:</strong> Chance to end the fight peacefully. 
@@ -355,6 +445,10 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                                                     <tr>
                                                         <td className="fw-bold text-primary">Stun</td>
                                                         <td>Skips the target's next turn</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className="fw-bold text-primary">*</td>
+                                                        <td>Multiplys value by number behind it</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
