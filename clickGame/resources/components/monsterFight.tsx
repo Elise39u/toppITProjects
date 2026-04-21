@@ -7,6 +7,7 @@ import { Link } from "@inertiajs/react";
 interface MonsterObj {
     Monster: MonsterData;
     user: GameUserData;
+    areaId: number;
 }
 
 interface MonsterData {
@@ -50,6 +51,8 @@ interface GameUserData {
     secondary_hand: string;
 }
 
+type WinStatus = 'Death' | 'Flee' | 'Seduce' | '';
+
 function getCookie(cName : String) {
   const name = cName + "=";
   const cDecoded = decodeURIComponent(document.cookie); //to be careful
@@ -65,7 +68,7 @@ const cookieName = getCookie("username") ?? "";
 const last_location = getCookie("last_location") ?? 1;
 
 //Add a usestate later to drain the Monsters health
-const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
+const MonsterFight: React.FC<MonsterObj> = ( { Monster, user, areaId }) => {
     const [show, setShow] = useState(false);
     const [showMonsterInfo, setShowMonsterInfo] = useState(false);
     const handleClose = () => setShow(false);
@@ -79,6 +82,7 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
     const [showDeathButton, setShowDeathButton] = useState(false); // Small problem.. React useState update one turn to late..
     const [showFightButtons, setShowFightButtons] = useState(true); //So if the user is dead or monster.. There can still be
     const [showLocationButtons, setShowLocationButtons] = useState(false); // Interacted for one more turn perhaps returning battle.
+    const [showWayWonStatus, setShowWayWonStatus] = useState<WinStatus>("Death");
 
     const [monsterStunned, setMonsterStunned] = useState(false);
     const [userStunned, setUserStunned] = useState(false);
@@ -89,16 +93,22 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
     const [tempMonsterHP, setTempMonsterHP] = useState(Monster.curhp);
     const [fightLog, setFightLogs] = useState<string[]>([""]);
 
+    const victoryMessages : Record<Exclude<WinStatus, ''>, string> = {
+        Death: `You have defeated ${Monster.name}! Im actually suprised and not gonna lie... I am impressed. I might have misjudged you back when we met on that Night cutie.`,
+        Flee: `${Monster.name} did actually flee.. Wow sad.. For you too you dont get any rewards.. Il reward you with a belly pet :)`,
+        Seduce: `Look i know i took interest you.. But what ever you did to that ${Monster.name}.. Please never do that again.. Im getting scared and im the preggo one in this mess..`
+    }
+
     async function cacluateDamage(attacker : string) {
         let attackDamge = 0;
         if(attacker === "user") {
             user.attack <= Monster.defense ? attackDamge = 0 : attackDamge = user.attack - Monster.defense;
-            monsterStunned ? attackDamge * 1.5 : null;
+            monsterStunned ? attackDamge *= 1.5 : null;
             setTempMonsterHP(tempMonsterHP - attackDamge);
             addLog(`${cookieName} attacked ${Monster.name} for ${attackDamge} damage!`);
         } else {
             Monster.attack <= user.defense ? attackDamge = 0 : attackDamge = Monster.attack - user.defense;
-            userStunned ? attackDamge * 1.5 : null;
+            userStunned ? attackDamge *= 1.5 : null;
             setTempUserHP(tempUserHP - attackDamge);
             addLog(`${Monster.name} attacked ${cookieName} for ${attackDamge} damage!`);
         }
@@ -107,6 +117,7 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
     async function MonsterAI() {
         if(monsterStunned) {
             addLog(Monster.name + " has been stunned and couldnt move this turn");
+            setMonsterStunned(false);
             return;
         }
 
@@ -162,22 +173,6 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
             chooseMonsterAction(tempMonsterAgression);
             return;
         }
-
-        /*
-            We have that the monster can work with:
-            userFleeChance = % based chance for the user to flee.
-            userStunChance = % based chance for the user to stun the monster
-            aggresionLvL = how higher how more likey to attack. 
-            monsterHpCal = meant as threashold where the monster reconsiders to taunt or flee
-
-            The question now remains. After seeing the kill and acting on it. What does a monster priortize?
-            Higher agression = more likey to attack but thresehold? 70 or 75? 
-            Taunt chance = based off? Like 1 aggresion level = X chance and is reduced by aggresion level.
-                But increased agian by hitting the HP threshold of 50% and 75% chance by x amount? 
-                Does the userStunChance or flee chance increase the threshold to choose for taunt by X amount?
-            Flee chance = based off? Like 1 agression level = X chance and is reduced by aggresion level.
-                But increased when hitting the Hp threshold of 50% and 75% chance by x amount?
-        */
     }
 
     function chooseMonsterAction(agressionLvL: number) {
@@ -195,6 +190,7 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
             
             if(fleeChance >= fleeBarrier) {
                 addLog(`${Monster.name} has fled from the fight!. You win but with no rewardss whomp whomp. :)` )
+                setShowWayWonStatus("Flee");
                 setShowLocationButtons(true);
                 setShowFightButtons(false);
             } else {
@@ -246,6 +242,7 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                 if(tempMonsterHP <= 0) {
                     setShowLocationButtons(true);
                     setShowFightButtons(false);
+                    setShowWayWonStatus("Death");
                     break;
                 }
                 await sleep(500);
@@ -258,34 +255,78 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
 
                 break;
             case "Taunt":
-                /* 
-                    State change issue causing without a page update to only have one update resulting in always true or false 
-                    until update. Also resulting in always monster stun if we dont update back after an turn properly 
+                const userPerStunChance = caclcuateUserStunChance();
+                const isSuccesFull = roleChance >= userPerStunChance; 
 
-                    Update userstun chance is never set techinally now same for flee chance until the monster moves
-                    So a first turn Taunt or flee always will result in false. Until the monster moved; 
-                    So the question is do we set these first or await a falied attempt? 
-
-                    Function used ot calculate these chances or simply solved by using the MonsterAI function. 
-                    caclcuateUserFleeChance();
-                    caclcuateUserStunChance(); 
-                 */
-                roleChance <= userStunChance ? setMonsterStunned(true) : null; 
-                console.log(roleChance);
-                console.log(userStunChance);
-                console.log(roleChance <= userStunChance)
-                userStunChance ? addLog(`You have succesfully taunted the ${Monster.name} and stunned it for the next turn!`) : addLog(`Your taunt failed against ${Monster.name}`);
+                if(isSuccesFull) {
+                    setMonsterStunned(true);
+                    addLog(`You have succesfully taunted the ${Monster.name} and stunned it for the next turn!`)
+                } else {
+                    addLog(`Your taunt failed against ${Monster.name}`);
+                    await sleep(600);
+                    MonsterAI();
+                }
+                break;
             case "Seduce":
-                // TODO: Implement seduce logic
+                const seduceChance = Math.floor(Math.random() * 100) + 1;
+
+                if(seduceChance >= 75) {
+                    setShowWayWonStatus("Seduce");
+                    setTempMonsterHP(0);
+                } else {
+                    addLog(`Your attempt to seduce ${Monster.name} failed.. Thats really akwards.. As the preggo transgirl in this work/relationship.. 
+                        Lets just retreat and forget this happend.. For your and my sake.. ${Monster.name} is too confused anyway with what you did so. `);
+                    setShowFightButtons(false);
+                    await sleep(5000);
+                    window.location.href = "/location/" + last_location;
+                }
                 break;
             case "Flee":
-                window.location.href = "/location/" + last_location
+                const userPerFleeChance = caclcuateUserFleeChance();
+                let FleeRoleChance = 0;
+                let userAttackPow = 0;
+                let hpDifference = tempUserHP - tempMonsterHP;
+                let increaseHPChance = 0; 
+
+                user.attack > Monster.defense ? userAttackPow = user.attack - Monster.defense : userAttackPow = 0;
+                hpDifference > 0 ? increaseHPChance = Math.floor(Math.random() * 25): null;
+                let areaFleeChance = calculateAreaFleeChance();
+
+                FleeRoleChance = userAttackPow > 0 ? FleeRoleChance += 25 + areaFleeChance + increaseHPChance : FleeRoleChance += areaFleeChance + increaseHPChance;
+                const isFleeSuccesFull = FleeRoleChance >= userPerFleeChance;
+                
+                if(isFleeSuccesFull) {
+                    addLog(`You have succesfully fled the ${Monster.name} In a bit you will retreat you to your last known location`);
+                    await sleep(1500);
+                    window.location.href = "/location/" + last_location
+                } else {
+                    addLog(`Your attempt to flee failed. Better luck next time!`);
+                    setFleeAttemptCounter(fleeAttemptCounter + 1);
+                    await sleep(600);
+                    MonsterAI();
+                }
                 break;
             default:
                 break;
         }
+
+        function calculateAreaFleeChance() {
+            switch(areaId) {
+                case 1: 
+                    if(fleeAttemptCounter < 5) return 0;
+                    else if(fleeAttemptCounter < 15) return 15;
+                    else if(fleeAttemptCounter < 30) return 25;
+                    else return 50;
+                default: 
+                 return 0;
+            }
+        }
     };
 
+    function handleAfterFight() {
+
+    }
+    
     return (
         <div className='locationBar'>
             <div className='locationDiv'>
@@ -306,6 +347,7 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                         <li className='monsterInfo'> {cookieName} Hp: <b>{tempUserHP}/{user.maxhp}</b></li>
                     </ul>
                     </div>
+                    <i> Actions are orderd by newsest first. So older ones are pushed to the bottom</i>
                     {/* Fight Log Box */}
                     <div className='fightLogs'>
                         {fightLog.map((fightLog, index) => (
@@ -332,7 +374,11 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user }) => {
                     }
                     {showLocationButtons &&
                         <div className="post-fight-options">
+                            {/* Add later the XP, Gold or if the monster fleed itself. Also if it dropped an item */}
                             <p id="outcomeFight">
+                                You have defeated {Monster.name}! <br />
+                                 <b>{victoryMessages[showWayWonStatus as keyof typeof victoryMessages]}</b> <br />
+                                Where do you want to go? 
                             </p>
 
                             <Link href="/location/9">Go back to the city</Link> <br/>

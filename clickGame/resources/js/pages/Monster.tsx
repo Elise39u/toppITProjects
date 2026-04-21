@@ -13,7 +13,7 @@ export default function Monster() {
         <div> 
             <AreaBar areaData={Monster.data.area} locationName={"You have encounterd: " + monsterName} userHP={"" + user.curhp + "/" + user.maxhp}
                 magicalPoints={"" + user.curmp + "/" + user.maxmp}/>
-            <MonsterFight Monster={Monster.data.monster} user={user}/>
+            <MonsterFight Monster={Monster.data.monster} user={user} areaId={Monster.data.area_id}/>
             <InventoryBar />
         </div>
     );
