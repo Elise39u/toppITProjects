@@ -19,6 +19,7 @@ class ChoicesResource extends JsonResource
             'name' => $this->name,
             'from_location_id' => $this->from_location_id,
             'to_location_id' => $this->to_location_id,
+            'type' => $this->type
         ];
     }
 }

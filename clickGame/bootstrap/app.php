@@ -22,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        //Used fpr testing testing. In case you get 419 uncomment this and add your route 
+        $middleware->validateCsrfTokens(
+            except: ['/login*']
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

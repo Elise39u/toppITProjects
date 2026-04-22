@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/esm/Button";
+import { router } from '@inertiajs/react'
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -13,31 +14,34 @@ export default function Login() {
         password?: string[];
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-            await axios.post("/login", {
-                email,
-                password,
-                remember,
-            });
-
-            window.location.href = "/location/1";
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                if (error.response?.status === 422) {
-                    setErrors(error.response.data.errors);
+        router.post('/login', {
+            email,
+            password,
+            remember,
+        }, {
+            onBefore: () => console.log("Starting login request..."),
+            onSuccess: (page) => {
+                if (page.props.auth.user && page.component === "Auth/Login") {
+                    const loc = page.props.auth.user.current_location_id || 1;
+                    router.get(`/location/${loc}`);
                 }
-            }
-        }
+            },
+            onError: (errors) => {
+                // This runs if Laravel returns ->withErrors()
+                console.log("Login Failed! Validation errors:", errors);
+            },
+            onFinish: () => console.log("Request finished."),
+        });
     };
 
     return (
         <div className="container locationBar">
             <h1>Login</h1>
-
             <form onSubmit={handleSubmit}>
+
                 <div className="form-element">
                     <label className="form-label">Email</label>
                     <input

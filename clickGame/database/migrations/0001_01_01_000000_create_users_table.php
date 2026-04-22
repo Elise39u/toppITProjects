@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            //$table->integer('current_location_id')->nullable()->default(1); // Remeber the location of the player so they can start from there. Also set it on creation to the start location
+            $table->integer('current_location_id')->nullable()->default(1); // Remeber the location of the player so they can start from there. Also set it on creation to the start location
             $table->integer('inventory_id')->nullable(); // Used to track the inventory of the player 
 
             // Stats of the player

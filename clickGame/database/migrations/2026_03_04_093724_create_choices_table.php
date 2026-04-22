@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('from_location_id');
             $table->string('to_location_id');
+            $table->string('type')->nullable();
         });
     }
 

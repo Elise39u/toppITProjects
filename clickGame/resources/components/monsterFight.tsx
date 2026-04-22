@@ -46,6 +46,7 @@ interface GameUserData {
     current_exp: number;
     exp_to_next_level: number;
     level: number;
+    current_location_id: number;
 
     primary_hand: string;
     secondary_hand: string;
@@ -324,9 +325,13 @@ const MonsterFight: React.FC<MonsterObj> = ( { Monster, user, areaId }) => {
     };
 
     function handleAfterFight() {
+        if(showDeathButton) {
+            
+        } else {
 
+        }
     }
-    
+
     return (
         <div className='locationBar'>
             <div className='locationDiv'>

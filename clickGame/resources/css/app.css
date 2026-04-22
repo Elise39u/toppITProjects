@@ -218,3 +218,17 @@ body {
     font-family: monospace;
     border: 1px solid #333;
 }
+
+.choiceOption .btn {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    text-align: left;
+}
+
+.choiceOption .btn:hover {
+    transform: translateX(5px); /* Slight slide effect when hovering */
+    filter: brightness(1.1);
+}
+
+.choiceOption .btn:active {
+    transform: scale(0.98); /* Press down effect */
+}

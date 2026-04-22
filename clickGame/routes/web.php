@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
         ]);
     });
 
+    Route::post('/user/update-location', [Login::class, 'updateLocation']);
     Route::get('/location/15/{area_id}', function ($area_id) {
         $monsterArea = MonsterArea::with(['monster.monster_type', 'area'])
             ->where('area_id', $area_id)

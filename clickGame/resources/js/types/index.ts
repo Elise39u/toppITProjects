@@ -30,7 +30,8 @@ export type Choice = {
     id: number;
     name: string;
     from_location_id: number;
-    to_location_id: number;
+    to_location_id: string;
+    type: string;
 };
 
 export type Area = {
