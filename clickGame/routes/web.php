@@ -15,6 +15,7 @@ use App\Http\Resources\AreasResource;
 use App\Http\Resources\MonsterAreaResource;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Auth\Login;
+use App\Http\Controllers\UserController;
 
 /*
     The idea in simple that there might be 4-5 pages in the end product
@@ -82,6 +83,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/user/update-location', [Login::class, 'updateLocation']);
+    Route::post('/user/resetplayer/{id}', [UserController::class, 'resetPlayerStats']);
+    Route::post('/user/winfight/{id}', [UserController::class, 'updatePlayerWinFight']);
+
     Route::get('/location/15/{area_id}', function ($area_id) {
         $monsterArea = MonsterArea::with(['monster.monster_type', 'area'])
             ->where('area_id', $area_id)
