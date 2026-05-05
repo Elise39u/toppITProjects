@@ -37,6 +37,10 @@ export type Choice = {
 export type Area = {
     id: number;
     name: string;
+    location_one: number;
+    location_one_name: string;
+    location_two: number;
+    location_two_name: string;
 };
 
 export type LocationData = {

@@ -48,6 +48,7 @@ const getLocationColor = (type: string) => {
         'safe': 'success',      // Green safe ones
         'quest': 'warning',     // Yellow for those having a quest or npcs. 
         'locked': 'secondary',  // Grey for paths you can't take
+        'item_needed': 'info', // Temp soloution to show users that they require an item until inventory and choice_Condtions is thought off. 
     };
 
     return colors[type] || 'primary'; // Default to Blue
@@ -59,19 +60,12 @@ const LocationView: React.FC<LocationComponentProps> = ({ location }) => {
     const handleShowFogModalClose = () => setShowFogModal(false);
 
 
-    const updateCurrentLocation = (newLocationId: string) => {
-        //Locations like 15/1 or 22/1 for shops, locations and npcs will cause an error. 
-        router.post('/user/update-location', {
-            location_id: newLocationId
-        }, {
-            preserveScroll: true, 
-            onSuccess: () => {
-                router.get(`/location/${newLocationId}`);
-            },
-            onError: (errors) => {
-                errors.location_id.includes("integer") ? router.get(`/location/${newLocationId}`) : handleShowFogModalShow();
-            }
-        });
+    const updateCurrentLocation = (newLocationId: string, choiceType: string) => {
+        if(choiceType === "locked" || choiceType === "item_needed") {
+            handleShowFogModalShow();
+        } else {
+            router.get(`/location/${newLocationId}`);
+        }
     };
 
 
@@ -91,7 +85,7 @@ const LocationView: React.FC<LocationComponentProps> = ({ location }) => {
                             return (
                                 <Button 
                                     key={choice.id}
-                                    onClick={() => updateCurrentLocation(choice.to_location_id)}
+                                    onClick={() => updateCurrentLocation(choice.to_location_id, choice.type)}
                                     className={`btn btn-${buttonColor} d-flex justify-content-between align-items-center shadow-sm py-2 px-3 border-2`}
                                 >
                                     <span className="fw-semibold">
@@ -108,9 +102,16 @@ const LocationView: React.FC<LocationComponentProps> = ({ location }) => {
                         <Modal.Header closeButton className="bg-info">
                             <Modal.Title>Locked Choice</Modal.Title>
                         </Modal.Header>
-                            <Modal.Body>
-                               <p> Dear Adventurer. As your voice from above in this fansty world. This location is shrouded in a heavy fog. 
-                                   Until the fog is lifed, you wont be able to get to this location. Gray choices have this warning adventurer. Success further
+                            <Modal.Body className="LocationModal">
+                               <p> Dear Adventurer. As your internal guide you either pressed as on this moment a gray button or light blue one. 
+                                    <li> Dark Gray ones are shrouded in heavy fog. Preventing us from adventuring furter. Until the fog is cleared 
+                                        You wont be able to get to these mentioned locations.
+                                    </li>
+                                    <li> The Light blue ones are choices with conditions. For example the first ending as requirs the paddle. 
+                                        So unless you find the required item like the paddle you wont be able to progress on this choice.
+                                        Further updates will make sure that these are hidden until the right item is found. For now not due to one problem
+                                        The condition system is not yet implemented. Because of that the choices are visable. 
+                                    </li>
                                </p>
                             </Modal.Body>
                         <Modal.Footer className="bg-info">

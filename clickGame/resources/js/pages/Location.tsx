@@ -11,7 +11,6 @@ export default function Location() {
 
     useEffect(() => {
         document.cookie = `username=${user.name}`;
-        document.cookie = `last_location=${location.data.id}`;
     }, [user.name]);   
 
     return (

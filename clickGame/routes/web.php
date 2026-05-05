@@ -16,6 +16,7 @@ use App\Http\Resources\MonsterAreaResource;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Auth\Login;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\UpdateUserLocation;
 
 /*
     The idea in simple that there might be 4-5 pages in the end product
@@ -80,7 +81,7 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Location', [
             'location' => new LocationResource($id)
         ]);
-    });
+    })->middleware(UpdateUserLocation::class);
 
     Route::post('/user/update-location', [Login::class, 'updateLocation']);
     Route::post('/user/resetplayer/{id}', [UserController::class, 'resetPlayerStats']);

@@ -26,7 +26,7 @@ const AreaBar: React.FC<AreaComponetDataProps> = ( { areaData, locationName, use
                     <p className='playerHealth'> Current Mana: <b>{magicalPoints}</b> </p>
                 </div>
                 <div className='areaInfoDiv'>
-                    <p className='areaText'> You're currently in: {areaData.name} </p>
+                    <p className='areaText'> You're currently in: {areaData.id === 0 ? "Unknown Area" : areaData.name} </p>
                     <p className='areaTime'> Current time is: {AreaTime} </p>
                 </div>
             </div>

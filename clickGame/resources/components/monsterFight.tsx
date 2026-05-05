@@ -8,7 +8,16 @@ import { Link, router } from "@inertiajs/react";
 interface MonsterObj {
     Monster: MonsterData;
     user: GameUserData;
-    areaId: number;
+    Area: AreaData;
+}
+
+interface AreaData {
+    id: number;
+    name: string;
+    location_one: number;
+    location_one_name: string;
+    location_two: number;
+    location_two_name: string;
 }
 
 interface MonsterData {
@@ -66,10 +75,9 @@ function getCookie(cName: String) {
     return res
 }
 const cookieName = getCookie("username") ?? "";
-const last_location = getCookie("last_location") ?? 1;
 
 //Add a usestate later to drain the Monsters health
-const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, areaId }) => {
+const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, Area }) => {
     const [show, setShow] = useState(false);
     const [showMonsterInfo, setShowMonsterInfo] = useState(false);
     const handleClose = () => setShow(false);
@@ -289,7 +297,7 @@ const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, areaId }) => {
                     handleFightNoRewards();
                     setShowFightButtons(false);
                     await sleep(5000);
-                    window.location.href = "/location/" + last_location;
+                    window.location.href = "/location/" + user.current_location_id;
                 }
                 break;
             case "Flee":
@@ -306,16 +314,20 @@ const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, areaId }) => {
                 FleeRoleChance = userAttackPow > 0 ? FleeRoleChance += 25 + areaFleeChance + increaseHPChance : FleeRoleChance += areaFleeChance + increaseHPChance;
                 const isFleeSuccesFull = FleeRoleChance >= userPerFleeChance;
 
-                if (isFleeSuccesFull) {
-                    addLog(`You have succesfully fled the ${Monster.name} In a bit you will retreat you to your last known location`);
-                    handleFightNoRewards();
-                    await sleep(2500);
-                    window.location.href = "/location/" + last_location
+                if (tempUserHP > 0) {
+                    if (isFleeSuccesFull) {
+                        addLog(`You have succesfully fled the ${Monster.name} In a bit you will retreat you to your last known location Which is: ${user.current_location_id}`);
+                        handleFightNoRewards();
+                        await sleep(2500);
+                        window.location.href = "/location/" + user.current_location_id
+                    } else {
+                        addLog(`Your attempt to flee failed. Better luck next time!`);
+                        setFleeAttemptCounter(fleeAttemptCounter + 1);
+                        await sleep(600);
+                        MonsterAI();
+                    }
                 } else {
-                    addLog(`Your attempt to flee failed. Better luck next time!`);
-                    setFleeAttemptCounter(fleeAttemptCounter + 1);
-                    await sleep(600);
-                    MonsterAI();
+                    handleAfterFight();
                 }
                 break;
             default:
@@ -323,7 +335,7 @@ const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, areaId }) => {
         }
 
         function calculateAreaFleeChance() {
-            switch (areaId) {
+            switch (Area.id) {
                 case 1:
                     if (fleeAttemptCounter < 5) return 0;
                     else if (fleeAttemptCounter < 15) return 15;
@@ -355,15 +367,10 @@ const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, areaId }) => {
 
     function handleAfterFight() {
         if (tempUserHP <= 0) {
-            console.log("user test");
-            console.log(router.post('/user/resetplayer/' + user.id, {
-                player_id: user.id,
-            }));
             router.post('/user/resetplayer/' + user.id, {
                 player_id: user.id,
             }, {
                 onSuccess: async () => {
-                console.log("Success death test");
                     addLog(`You have died... Stats and inventory resetted and you will be send back to the hotel on location 1`)
                     await sleep(2000);
                 },
@@ -469,8 +476,8 @@ const MonsterFight: React.FC<MonsterObj> = ({ Monster, user, areaId }) => {
                                 Where do you want to go?
                             </p>
 
-                            <Link href="/location/9">Go back to the city</Link> <br />
-                            <Link href="/location/5">Go to the docks</Link>
+                            <Link href={'/location/' + Area.location_one}>{Area.location_one_name}</Link> <br />
+                            <Link href={'/location/' + Area.location_two}>{Area.location_two_name}</Link>
                         </div>
                     }
                     {showDeathButton &&

@@ -232,3 +232,8 @@ body {
 .choiceOption .btn:active {
     transform: scale(0.98); /* Press down effect */
 }
+
+.LocationModal {
+    margin-left: 5px;
+    margin-right: 5px;
+}
